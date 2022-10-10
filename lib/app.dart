@@ -1,5 +1,6 @@
-import 'package:aduan/home.dart';
+import 'package:aduan/pages.dart';
 import 'package:flutter/material.dart';
+import 'package:aduan/config/config.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -7,11 +8,11 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Aduan Kepolisian',
+      title: Config().getTitle,
       theme: ThemeData(
-        primarySwatch: Colors.amber,
+        primarySwatch: Config().getColor as MaterialColor,
       ),
-      home: const Home(title: 'Home Page'),
+      home: const Pages(),
     );
   }
 }
