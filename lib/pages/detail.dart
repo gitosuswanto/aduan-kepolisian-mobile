@@ -1,11 +1,10 @@
-import 'dart:convert';
-
+import 'package:aduan/components/jenis_gen.dart';
 import 'package:aduan/config/config.dart';
 import 'package:aduan/data/aduan_data.dart';
 import 'package:aduan/components/status_gen.dart';
+import 'package:aduan/data/requests.dart';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:ionicons/ionicons.dart';
 
 class Detail extends StatefulWidget {
@@ -20,28 +19,16 @@ class Detail extends StatefulWidget {
 class _DetailState extends State<Detail> {
   late Future<AduanData> _aduan;
 
-  Future<AduanData> fetchAduan() async {
-    final res = await http
-        .get(Uri.parse('${Config().getApiUrl}/aduan/${widget.nomor}'));
-
-    if (res.statusCode == 200) {
-      return AduanData.fromJson(jsonDecode(res.body));
-    } else {
-      throw Exception('Failed to load data');
-    }
-  }
-
   @override
   void initState() {
     super.initState();
-    fetchAduan();
-    _aduan = fetchAduan();
+    _aduan = ApiRequests().getAduanByNomor(nomor: widget.nomor);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
+      backgroundColor: Colors.white,
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Ionicons.arrow_back),
@@ -56,7 +43,6 @@ class _DetailState extends State<Detail> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             Data? data = snapshot.data!.data!.first;
-
             return SingleChildScrollView(
               scrollDirection: Axis.vertical,
               child: Column(
@@ -66,9 +52,12 @@ class _DetailState extends State<Detail> {
                   SizedBox(
                     height: 250,
                     width: double.infinity,
-                    child: Image.network(
-                      '${Config().getBaseUrl}/foto_kejadian/${data.foto}',
-                      fit: BoxFit.cover,
+                    child: Hero(
+                      tag: data.nomor.toString(),
+                      child: Image.network(
+                        '${Config().getBaseUrl}/foto_kejadian/${data.foto}',
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -77,7 +66,6 @@ class _DetailState extends State<Detail> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Judul
                         Text(
                           data.judul!,
                           style: const TextStyle(
@@ -86,84 +74,29 @@ class _DetailState extends State<Detail> {
                           ),
                         ),
                         const SizedBox(height: 5),
+                        Text(
+                          data.tanggal!,
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey.shade800,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        const SizedBox(height: 5),
+                        Text(
+                          '${data.lokasi}',
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.grey.shade600,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
                         Row(
                           children: [
                             StatusGen().text(status: data.status!),
                             const SizedBox(width: 10),
-                            Text(
-                              data.tanggal!,
-                              style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 5),
-                        Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 2,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.blueGrey,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  const Icon(
-                                    Ionicons.location_outline,
-                                    size: 13,
-                                    color: Colors.white,
-                                  ),
-                                  const SizedBox(width: 5),
-                                  const Text(
-                                    // '${data.lokasi}',
-                                    "lokasi",
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(width: 5),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 2,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.blueGrey,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  const Icon(
-                                    Ionicons.warning_outline,
-                                    size: 13,
-                                    color: Colors.white,
-                                  ),
-                                  const SizedBox(width: 5),
-                                  Text(
-                                    '${data.jenis}',
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                            JenisGen().jenisAduanGenerator(jenis: data.jenis!),
                           ],
                         ),
                         const SizedBox(height: 25),
@@ -171,17 +104,16 @@ class _DetailState extends State<Detail> {
                     ),
                   ),
                   Container(
-                    decoration: const BoxDecoration(
-                      // shadow
+                    decoration: BoxDecoration(
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black12,
+                          color: Colors.grey.shade100,
                           blurRadius: 5,
-                          offset: Offset(0, -1),
+                          offset: const Offset(0, -5),
                         ),
                       ],
                       color: Colors.white,
-                      borderRadius: BorderRadius.only(
+                      borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(35),
                         topRight: Radius.circular(35),
                       ),

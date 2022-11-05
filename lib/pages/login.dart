@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:aduan/config/config.dart';
+import 'package:aduan/data/database_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:validators/validators.dart';
+import 'package:http/http.dart' as http;
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -11,10 +15,12 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  String _errorMessages = '';
+  bool _isLoading = false;
+
   bool _obscureText = true;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  // controller for the textformfield
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -44,6 +50,84 @@ class _LoginState extends State<Login> {
     setState(() {
       _obscureText = !_obscureText;
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _emailController.text = 'test@mail.com';
+    _passwordController.text = '01012022';
+  }
+
+  // attempt login
+  void attemptLogin() async {
+    final dbHelper = DatabaseHelper.instance;
+
+    setState(() {
+      _isLoading = true;
+      _renderLoadingIndicator();
+    });
+
+    final String email = _emailController.text;
+    final String password = _passwordController.text;
+
+    final String apiUrl = '${Config().getApiUrl}login';
+    await http.post(Uri.parse(apiUrl), body: {
+      'login': email,
+      'password': password,
+    }).then((response) {
+      setState(() {
+        _isLoading = false;
+        _renderLoadingIndicator();
+      });
+
+      final data = jsonDecode(response.body);
+      if (data['success']) {
+        if (data['data']['active']) {
+          data['data'].forEach((key, value) {
+            dbHelper.getDataByKey(key).then((dbVal) {
+              if (dbVal.isEmpty) {
+                dbHelper.insertData(key, value);
+              } else {
+                dbHelper.updateData(key, value);
+              }
+            });
+          });
+
+          Navigator.pushReplacementNamed(context, 'pages');
+        } else {
+          setState(() {
+            _errorMessages = 'Akun anda belum aktif';
+          });
+        }
+      } else {
+        setState(() {
+          _errorMessages = data['message'];
+        });
+      }
+    }).catchError(
+      (error) {
+        setState(() {
+          _isLoading = false;
+          _renderLoadingIndicator();
+          _errorMessages = "pastikan anda terhubung ke internet !";
+        });
+      },
+    );
+  }
+
+  void _renderLoadingIndicator() {
+    _isLoading
+        ? showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            },
+          )
+        : Navigator.pop(context);
   }
 
   @override
@@ -85,9 +169,7 @@ class _LoginState extends State<Login> {
                             color: Colors.white,
                           ),
                           border: OutlineInputBorder(),
-                          labelStyle: TextStyle(
-                            color: Colors.white,
-                          ),
+                          labelStyle: TextStyle(color: Colors.white),
                           enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.white),
                           ),
@@ -95,7 +177,7 @@ class _LoginState extends State<Login> {
                             borderSide: BorderSide(color: Colors.white),
                           ),
                           errorBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.red),
+                            borderSide: BorderSide(color: Colors.redAccent),
                           ),
                         ),
                       ),
@@ -124,9 +206,7 @@ class _LoginState extends State<Login> {
                             onPressed: () => _toggleObscureText(),
                           ),
                           border: const OutlineInputBorder(),
-                          labelStyle: const TextStyle(
-                            color: Colors.white,
-                          ),
+                          labelStyle: const TextStyle(color: Colors.white),
                           enabledBorder: const OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.white),
                           ),
@@ -134,35 +214,41 @@ class _LoginState extends State<Login> {
                             borderSide: BorderSide(color: Colors.white),
                           ),
                           errorBorder: const OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.red),
+                            borderSide: BorderSide(color: Colors.redAccent),
                           ),
                         ),
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          TextButton(
-                            onPressed: () {},
-                            child: const Text(
-                              'Lupa Password ?',
-                              style: TextStyle(
-                                color: Colors.white,
+                          Hero(
+                            tag: 'reset-password',
+                            child: TextButton(
+                              onPressed: () {
+                                Navigator.pushNamed(context, 'reset-password');
+                              },
+                              child: const Text(
+                                'Lupa Password ?',
+                                style: TextStyle(color: Colors.white),
                               ),
                             ),
                           ),
                         ],
                       ),
+                      const SizedBox(height: 10),
+                      _errorMessages.isNotEmpty
+                          ? Text(
+                              _errorMessages,
+                              style: const TextStyle(color: Colors.redAccent),
+                            )
+                          : const SizedBox.shrink(),
                       const SizedBox(height: 20),
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Processing Data'),
-                                ),
-                              );
+                              attemptLogin();
                             }
                           },
                           style: ElevatedButton.styleFrom(

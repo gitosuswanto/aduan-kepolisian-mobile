@@ -1,159 +1,101 @@
+import 'dart:convert';
+
 class AduanData {
-  int? _code;
-  bool? _success;
-  List<Data>? _data;
+  AduanData({
+    this.code,
+    this.success,
+    this.message,
+    this.data,
+  });
 
-  AduanData({int? code, bool? success, List<Data>? data}) {
-    if (code != null) {
-      this._code = code;
-    }
-    if (success != null) {
-      this._success = success;
-    }
-    if (data != null) {
-      this._data = data;
-    }
-  }
+  int? code;
+  bool? success;
+  String? message;
+  List<Data>? data;
 
-  int? get code => _code;
-  set code(int? code) => _code = code;
-  bool? get success => _success;
-  set success(bool? success) => _success = success;
-  List<Data>? get data => _data;
-  set data(List<Data>? data) => _data = data;
+  factory AduanData.fromRawJson(String str) => AduanData.fromJson(json.decode(str));
 
-  AduanData.fromJson(Map<String, dynamic> json) {
-    _code = json['code'];
-    _success = json['success'];
-    if (json['data'] != null) {
-      _data = <Data>[];
-      json['data'].forEach((v) {
-        _data!.add(new Data.fromJson(v));
-      });
-    }
-  }
+  String toRawJson() => json.encode(toJson());
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['code'] = this._code;
-    data['success'] = this._success;
-    if (this._data != null) {
-      data['data'] = this._data!.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
+  factory AduanData.fromJson(Map<String, dynamic> json) => AduanData(
+    code: json["code"] == null ? null : json["code"],
+    success: json["success"] == null ? null : json["success"],
+    message: json["message"] == null ? null : json["message"],
+    data: json["data"] == null ? null : List<Data>.from(json["data"].map((x) => Data.fromJson(x))),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "code": code == null ? null : code,
+    "success": success == null ? null : success,
+    "message": message == null ? null : message,
+    "data": data == null ? null : List<dynamic>.from(data!.map((x) => x.toJson())),
+  };
 }
 
 class Data {
-  String? _userId;
-  String? _nomor;
-  String? _status;
-  String? _tanggal;
-  String? _jenis;
-  String? _judul;
-  String? _lokasi;
-  String? _keterangan;
-  String? _foto;
-  String? _createdAt;
-  String? _deletedAt;
+  Data({
+    this.id,
+    this.userId,
+    this.nomor,
+    this.status,
+    this.tanggal,
+    this.jenis,
+    this.judul,
+    this.lokasi,
+    this.keterangan,
+    this.foto,
+    this.createdAt,
+    this.updatedAt,
+    this.deletedAt,
+  });
 
-  Data(
-      {String? userId,
-      String? nomor,
-      String? status,
-      String? tanggal,
-      String? jenis,
-      String? judul,
-      String? lokasi,
-      String? keterangan,
-      String? foto,
-      String? createdAt,
-      String? deletedAt}) {
-    if (userId != null) {
-      this._userId = userId;
-    }
-    if (nomor != null) {
-      this._nomor = nomor;
-    }
-    if (status != null) {
-      this._status = status;
-    }
-    if (tanggal != null) {
-      this._tanggal = tanggal;
-    }
-    if (jenis != null) {
-      this._jenis = jenis;
-    }
-    if (judul != null) {
-      this._judul = judul;
-    }
-    if (lokasi != null) {
-      this._lokasi = lokasi;
-    }
-    if (keterangan != null) {
-      this._keterangan = keterangan;
-    }
-    if (foto != null) {
-      this._foto = foto;
-    }
-    if (createdAt != null) {
-      this._createdAt = createdAt;
-    }
-    if (deletedAt != null) {
-      this._deletedAt = deletedAt;
-    }
-  }
+  String? id;
+  String? userId;
+  String? nomor;
+  String? status;
+  String? tanggal;
+  String? jenis;
+  String? judul;
+  String? lokasi;
+  String? keterangan;
+  String? foto;
+  DateTime? createdAt;
+  DateTime? updatedAt;
+  dynamic? deletedAt;
 
-  String? get userId => _userId;
-  set userId(String? userId) => _userId = userId;
-  String? get nomor => _nomor;
-  set nomor(String? nomor) => _nomor = nomor;
-  String? get status => _status;
-  set status(String? status) => _status = status;
-  String? get tanggal => _tanggal;
-  set tanggal(String? tanggal) => _tanggal = tanggal;
-  String? get jenis => _jenis;
-  set jenis(String? jenis) => _jenis = jenis;
-  String? get judul => _judul;
-  set judul(String? judul) => _judul = judul;
-  String? get lokasi => _lokasi;
-  set lokasi(String? lokasi) => _lokasi = lokasi;
-  String? get keterangan => _keterangan;
-  set keterangan(String? keterangan) => _keterangan = keterangan;
-  String? get foto => _foto;
-  set foto(String? foto) => _foto = foto;
-  String? get createdAt => _createdAt;
-  set createdAt(String? createdAt) => _createdAt = createdAt;
-  String? get deletedAt => _deletedAt;
-  set deletedAt(String? deletedAt) => _deletedAt = deletedAt;
+  factory Data.fromRawJson(String str) => Data.fromJson(json.decode(str));
 
-  Data.fromJson(Map<String, dynamic> json) {
-    _userId = json['user_id'];
-    _nomor = json['nomor'];
-    _status = json['status'];
-    _tanggal = json['tanggal'];
-    _jenis = json['jenis'];
-    _judul = json['judul'];
-    _lokasi = json['lokasi'];
-    _keterangan = json['keterangan'];
-    _foto = json['foto'];
-    _createdAt = json['created_at'];
-    _deletedAt = json['deleted_at'];
-  }
+  String toRawJson() => json.encode(toJson());
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['user_id'] = this._userId;
-    data['nomor'] = this._nomor;
-    data['status'] = this._status;
-    data['tanggal'] = this._tanggal;
-    data['jenis'] = this._jenis;
-    data['judul'] = this._judul;
-    data['lokasi'] = this._lokasi;
-    data['keterangan'] = this._keterangan;
-    data['foto'] = this._foto;
-    data['created_at'] = this._createdAt;
-    data['deleted_at'] = this._deletedAt;
-    return data;
-  }
+  factory Data.fromJson(Map<String, dynamic> json) => Data(
+    id: json["id"] == null ? null : json["id"],
+    userId: json["user_id"] == null ? null : json["user_id"],
+    nomor: json["nomor"] == null ? null : json["nomor"],
+    status: json["status"] == null ? null : json["status"],
+    tanggal: json["tanggal"] == null ? null : json["tanggal"],
+    jenis: json["jenis"] == null ? null : json["jenis"],
+    judul: json["judul"] == null ? null : json["judul"],
+    lokasi: json["lokasi"] == null ? null : json["lokasi"],
+    keterangan: json["keterangan"] == null ? null : json["keterangan"],
+    foto: json["foto"] == null ? null : json["foto"],
+    createdAt: json["created_at"] == null ? null : DateTime.parse(json["created_at"]),
+    updatedAt: json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),
+    deletedAt: json["deleted_at"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "id": id == null ? null : id,
+    "user_id": userId == null ? null : userId,
+    "nomor": nomor == null ? null : nomor,
+    "status": status == null ? null : status,
+    "tanggal": tanggal == null ? null : tanggal,
+    "jenis": jenis == null ? null : jenis,
+    "judul": judul == null ? null : judul,
+    "lokasi": lokasi == null ? null : lokasi,
+    "keterangan": keterangan == null ? null : keterangan,
+    "foto": foto == null ? null : foto,
+    "created_at": createdAt == null ? null : createdAt!.toIso8601String(),
+    "updated_at": updatedAt == null ? null : updatedAt!.toIso8601String(),
+    "deleted_at": deletedAt,
+  };
 }

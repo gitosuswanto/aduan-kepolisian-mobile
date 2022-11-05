@@ -6,6 +6,9 @@ import 'package:ionicons/ionicons.dart';
 import '../pages/home.dart';
 
 class Config {
+  // +----------------------+ //
+  // | Variable declaration | //
+  // +----------------------+ //
   final String _title = 'Aduan Kepolisian';
 
   final Color _color = Colors.indigo;
@@ -19,23 +22,42 @@ class Config {
       'title': 'Home',
       'icon': Ionicons.home_outline,
       'active': Ionicons.home,
-      'page': Home()
+      'page': const Home()
     },
     {
       'title': 'Aduan',
       'icon': Ionicons.warning_outline,
       'active': Ionicons.warning,
-      'page': Aduan()
+      'page': const Aduan()
     },
     {
       'title': 'Profile',
       'icon': Ionicons.person_circle_outline,
       'active': Ionicons.person_circle,
-      'page': Profile()
+      'page': const Profile()
     },
   ];
 
-  // Getter
+  final String _dbName = 'aduan_v1.db';
+  final String _table = 'aduanData';
+  final String _columnId = 'id';
+  final String _columnKey = 'key';
+  final String _columnValue = 'value';
+
+  // final List _jenis = [
+  //   'Kecelakaan',
+  //   'Kriminal',
+  //   'Pencurian',
+  //   'Pembunuhan',
+  //   'Pemerkosaan',
+  //   'Pembajakan',
+  // ];
+
+  // +----------------+ //
+  // |     Getter     | //
+  // +----------------+ //
+
+  //Getter
   String get getTitle => _title;
 
   Color get getColor => _color;
@@ -45,4 +67,18 @@ class Config {
   String get getApiUrl => _apiUrl;
 
   List<Map<String, dynamic>> get getMenu => _menu;
+
+  String get getDbName => _dbName;
+  String get getTable => _table;
+  String get getColumnId => _columnId;
+  String get getColumnKey => _columnKey;
+  String get getColumnValue => _columnValue;
+
+  // List<String> get getJenis => _jenis;
+
+  // +----------------+ //
+  // |     Setter     | //
+  // +----------------+ //
+
+
 }

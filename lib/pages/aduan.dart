@@ -1,13 +1,11 @@
-import 'dart:convert';
-
 import 'package:aduan/config/config.dart';
 import 'package:aduan/data/aduan_data.dart';
 import 'package:aduan/components/status_gen.dart';
+import 'package:aduan/data/database_helper.dart';
 import 'package:aduan/pages/detail.dart';
+import 'package:aduan/data/requests.dart';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:ionicons/ionicons.dart';
 
 class Aduan extends StatefulWidget {
@@ -18,45 +16,116 @@ class Aduan extends StatefulWidget {
 }
 
 class _AduanState extends State<Aduan> {
+  String uid = '';
   late Future<AduanData> _aduan;
-
-  Future<AduanData> fetchAduan() async {
-    final res = await http.get(Uri.parse('${Config().getApiUrl}/aduan/all'));
-
-    if (res.statusCode == 200) {
-      return AduanData.fromJson(jsonDecode(res.body));
-    } else {
-      throw Exception('Failed to load data');
-    }
-  }
 
   @override
   void initState() {
     super.initState();
     refreshData();
+
+    getUid().then((value) {
+      if (value != '') {
+        setState(() {
+          uid = value;
+          refreshData();
+        });
+      }
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    refreshData();
+  }
+
+  Future<String> getUid() {
+    final dbHelper = DatabaseHelper.instance;
+    final uid = dbHelper.getDataByKey('id');
+    return uid;
   }
 
   Future<void> refreshData() async {
     setState(() {
       print('refreshing data');
-      _aduan = fetchAduan();
+      _aduan = ApiRequests().getAllAduan(uid);
     });
+  }
+
+  void hapusAduan(String nomor) {
+    ApiRequests().deleteAduan(nomor: nomor).then((res) {
+      if(res.success!) {
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(res.message!),
+            backgroundColor: Colors.green,
+          ),
+        );
+        refreshData();
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(res.message!),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    });
+  }
+
+  emptyMessage() {
+    return RefreshIndicator(
+      onRefresh: () => Future.delayed(
+        const Duration(seconds: 1),
+            () => _AduanState().refreshData(),
+      ),
+      child: CustomScrollView(
+        slivers: <Widget>[
+          SliverFillRemaining(
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Ionicons.information_circle_outline,
+                    size: 100,
+                    color: Colors.grey.shade400,
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    "Tidak ada aduan",
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.grey.shade400,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<AduanData>(
-      future: _aduan,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          List<Data>? data = snapshot.data!.data;
-          if (data!.isEmpty) {
-            return const emptyData();
-          } else {
-            return RefreshIndicator(
+    if(uid == '') {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    } else {
+      return FutureBuilder<AduanData>(
+        future: _aduan,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            List<Data>? data = snapshot.data!.data;
+            return data!.isEmpty ? emptyMessage() : RefreshIndicator(
               onRefresh: () => Future.delayed(
                 const Duration(seconds: 1),
-                () => refreshData(),
+                    () => refreshData(),
               ),
               child: ListView.builder(
                 itemCount: data.length,
@@ -73,41 +142,62 @@ class _AduanState extends State<Aduan> {
                       onPressed: () {
                         Navigator.of(context)
                             .push(
-                              MaterialPageRoute(
-                                builder: (context) => Detail(
-                                  nomor: data[index].nomor!,
-                                ),
-                              ),
-                            )
-                            .then(
-                              (value) => refreshData(),
-                            );
+                          MaterialPageRoute(
+                            builder: (context) => Detail(
+                              nomor: data[index].nomor!,
+                            ),
+                          ),
+                        ).then((value) => refreshData());
                       },
                       onLongPress: () {
                         showDialog(
                           context: context,
                           builder: (context) {
                             return AlertDialog(
-                              title:
-                                  Text("Hapus Aduan : ${data[index].nomor!}"),
-                              content: Text(
-                                  'Apakah anda yakin akan menghapus aduan berikut ini: \n\nTentang : ${data[index].judul!} \nNomor : ${data[index].nomor!.toString()} \nDiajukan : ${data[index].tanggal!.toString()}'),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  style: TextButton.styleFrom(
-                                    foregroundColor: Colors.redAccent,
+                              title: Row(
+                                children: [
+                                  const Icon(
+                                    Ionicons.alert_circle_outline,
+                                    color: Colors.red,
                                   ),
-                                  child: const Text('Ya'),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: const Text('Batal'),
-                                ),
+                                  const SizedBox(width: 8),
+                                  Text("Hapus Aduan : ${data[index].nomor!}"),
+                                ],
+                              ),
+                              content: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment:  MainAxisAlignment.start ,
+                                children: [
+                                  const Text("Apakah anda yakin ingin menghapus aduan ini?"),
+                                  const SizedBox(height: 10),
+                                  Text('Tentang\t: ${data[index].judul!}',),
+                                  Text('Nomor\t: ${data[index].nomor!}',),
+                                  Text('Diajukan\t: ${data[index].tanggal!}',),
+                                  Text('Status\t: ${data[index].status!}',),
+                                ],
+                              ),
+                              actions: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    TextButton(
+                                      onPressed: () {
+                                        hapusAduan(data[index].nomor!);
+                                      },
+                                      style: TextButton.styleFrom(
+                                        foregroundColor: Colors.redAccent,
+                                      ),
+                                      child: const Text('Ya'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: const Text('Batal'),
+                                    ),
+                                  ],
+                                )
                               ],
                             );
                           },
@@ -120,9 +210,12 @@ class _AduanState extends State<Aduan> {
                             child: Container(
                               height: 100,
                               color: Colors.grey[200],
-                              child: Image.network(
-                                '${Config().getBaseUrl}/foto_kejadian/${data[index].foto}',
-                                fit: BoxFit.cover,
+                              child: Hero(
+                                tag: data[index].nomor!.toString(),
+                                child: Image.network(
+                                  '${Config().getBaseUrl}/foto_kejadian/${data[index].foto}',
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
                           ),
@@ -181,7 +274,7 @@ class _AduanState extends State<Aduan> {
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 5),
                             child:
-                                StatusGen().bullet(status: data[index].status!),
+                            StatusGen().bullet(status: data[index].status!),
                           ),
                         ],
                       ),
@@ -190,40 +283,15 @@ class _AduanState extends State<Aduan> {
                 },
               ),
             );
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Snapshot Error : ${snapshot.error}'));
           }
-        } else if (snapshot.hasError) {
-          return Center(child: Text('Snapshot Error : ${snapshot.error}'));
-        }
 
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      },
-    );
-  }
-}
-
-class emptyData extends StatelessWidget {
-  const emptyData({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      child: const Card(
-        child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 26, horizontal: 29),
-          child: Text(
-            'Belum ada aduan',
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.redAccent,
-            ),
-          ),
-        ),
-      ),
-    );
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+      );
+    }
   }
 }

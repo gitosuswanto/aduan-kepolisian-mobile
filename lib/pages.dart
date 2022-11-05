@@ -1,6 +1,5 @@
 import 'package:aduan/config/config.dart';
-import 'package:aduan/pages/aduan.dart';
-import 'package:aduan/pages/tambah_aduan.dart';
+import 'package:aduan/data/database_helper.dart';
 
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
@@ -13,13 +12,27 @@ class Pages extends StatefulWidget {
 }
 
 class _PagesState extends State<Pages> {
-  int _selectedIndex = 1;
+  int _selectedIndex = 0;
   final menu = Config().getMenu;
   late String _title = menu[_selectedIndex]['title'];
+  String uid = '';
 
   @override
   void initState() {
     super.initState();
+    getUid().then((value) {
+      if (value != '') {
+        setState(() {
+          uid = value;
+        });
+      }
+    });
+  }
+
+  Future<String> getUid() {
+    final dbHelper = DatabaseHelper.instance;
+    final uid = dbHelper.getDataByKey('id');
+    return uid;
   }
 
   void _onItemTapped(int index) {
@@ -58,13 +71,9 @@ class _PagesState extends State<Pages> {
               menu[_selectedIndex]['title'] == 'Home'
           ? FloatingActionButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const TambahAduan()),
-                );
+                Navigator.pushNamed(context, 'tambah-aduan');
               },
               tooltip: 'Tambah Aduan',
-              heroTag: 'tambah_aduan',
               child: const Icon(Ionicons.add),
             )
           : null,
