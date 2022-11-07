@@ -71,8 +71,7 @@ class _LoginState extends State<Login> {
     final String email = _emailController.text;
     final String password = _passwordController.text;
 
-    final String apiUrl = '${Config().getApiUrl}login';
-    await http.post(Uri.parse(apiUrl), body: {
+    await http.post(Uri.parse('${Config().getApiUrl}login'), body: {
       'login': email,
       'password': password,
     }).then((response) {
@@ -83,22 +82,43 @@ class _LoginState extends State<Login> {
 
       final data = jsonDecode(response.body);
       if (data['success']) {
-        if (data['data']['active']) {
-          data['data'].forEach((key, value) {
-            dbHelper.getDataByKey(key).then((dbVal) {
-              if (dbVal.isEmpty) {
-                dbHelper.insertData(key, value);
-              } else {
-                dbHelper.updateData(key, value);
-              }
+        if (data['data']['role'] != 'admin') {
+          if (data['data']['active']) {
+            data['data'].forEach((key, value) {
+              dbHelper.getDataByKey(key).then((dbVal) {
+                if (dbVal.isEmpty) {
+                  dbHelper.insertData(key, value);
+                } else {
+                  dbHelper.updateData(key, value);
+                }
+              });
             });
-          });
 
-          Navigator.pushReplacementNamed(context, 'pages');
+            Navigator.pushReplacementNamed(context, 'pages');
+          } else {
+            setState(() {
+              _errorMessages = 'Akun anda belum aktif';
+            });
+          }
         } else {
-          setState(() {
-            _errorMessages = 'Akun anda belum aktif';
-          });
+          showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: const Text('Login Gagal'),
+                  content: const Text(
+                    'Anda tidak diizinkan untuk login di aplikasi ini',
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text('OK'),
+                    )
+                  ],
+                );
+              });
         }
       } else {
         setState(() {
