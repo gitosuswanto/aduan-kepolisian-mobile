@@ -33,7 +33,7 @@ class _ResetPasswordState extends State<ResetPassword> {
     return null;
   }
 
-  void resetPassword() async{
+  void resetPassword() async {
     setState(() {
       _isLoading = true;
       _renderLoadingIndicator();
@@ -64,11 +64,13 @@ class _ResetPasswordState extends State<ResetPassword> {
                   Text('Berhasil !'),
                 ],
               ),
-              content: const Text('Password Berhasil diubah !\nSilahkan login kembali'),
+              content: const Text(
+                  'Password Berhasil diubah !\nSilahkan login kembali'),
               actions: [
                 TextButton(
                   onPressed: () {
-                    Navigator.of(context).pushNamedAndRemoveUntil('login', (route) => false);
+                    Navigator.of(context)
+                        .pushNamedAndRemoveUntil('login', (route) => false);
                   },
                   child: const Text('Login'),
                 ),
@@ -77,43 +79,41 @@ class _ResetPasswordState extends State<ResetPassword> {
           },
         );
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                RichText(
-                  text: const TextSpan(
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                    children: [
-                      WidgetSpan(
-                        child: Icon(
-                          Ionicons.close_circle_outline,
-                          color: Colors.red,
-                          size: 18,
-                        ),
-                      ),
-                      TextSpan(
-                        text: ' Gagal',
-                        style: TextStyle(
-                          color: Colors.red,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ],
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              RichText(
+                text: const TextSpan(
+                  style: TextStyle(
+                    color: Colors.white,
                   ),
+                  children: [
+                    WidgetSpan(
+                      child: Icon(
+                        Ionicons.close_circle_outline,
+                        color: Colors.red,
+                        size: 18,
+                      ),
+                    ),
+                    TextSpan(
+                      text: ' Gagal',
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 8),
-                Text('${body['message']}'),
-              ],
-            ),
-          )
-        );
+              ),
+              const SizedBox(height: 8),
+              Text('${body['message']}'),
+            ],
+          ),
+        ));
       }
     }).catchError((e) {
       setState(() {
@@ -162,14 +162,15 @@ class _ResetPasswordState extends State<ResetPassword> {
   void _renderLoadingIndicator() {
     _isLoading
         ? showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      },
-    ) : Navigator.pop(context);
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            },
+          )
+        : Navigator.pop(context);
   }
 
   @override
@@ -208,9 +209,8 @@ class _ResetPasswordState extends State<ResetPassword> {
                 ),
                 const SizedBox(height: 25),
                 Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
+                    key: _formKey,
+                    child: Column(children: [
                       TextFormField(
                         style: const TextStyle(color: Colors.white),
                         validator: _emailValidator,
@@ -258,63 +258,67 @@ class _ResetPasswordState extends State<ResetPassword> {
                             ),
                           ),
                           IconButton(
-                            onPressed: (){
+                            onPressed: () {
                               showDialog(
                                   context: context,
                                   builder: (context) => AlertDialog(
-                                    title: Row(
-                                      children: [
-                                        Hero(
-                                          tag: 'bantuan_icon_reset_password',
-                                          child: Icon(
-                                            Ionicons.information_circle_outline,
-                                            color: Config().getColor,
-                                          ),
+                                        title: Row(
+                                          children: [
+                                            Hero(
+                                              tag:
+                                                  'bantuan_icon_reset_password',
+                                              child: Icon(
+                                                Ionicons
+                                                    .information_circle_outline,
+                                                color: Config().getColor,
+                                              ),
+                                            ),
+                                            const SizedBox(width: 10),
+                                            const Text('Bantuan'),
+                                          ],
                                         ),
-                                        const SizedBox(width: 10),
-                                        const Text('Bantuan'),
-                                      ],
-                                    ),
-                                    content: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        RichText(
-                                          text: const TextSpan(
+                                        content: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            RichText(
+                                              text: const TextSpan(
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 14,
+                                                  ),
+                                                  children: [
+                                                    TextSpan(
+                                                      text:
+                                                          'Password baru akan dirubah berdasarkan tanggal lahir yang terdaftar pada akun anda, dengan format',
+                                                    ),
+                                                    TextSpan(
+                                                      text: ' DDMMYYYY',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                  ]),
+                                            ),
+                                            const SizedBox(height: 10),
+                                            const Text(
+                                              'Contoh : 28121990',
+                                              textAlign: TextAlign.start,
                                               style: TextStyle(
                                                 color: Colors.black,
                                                 fontSize: 14,
                                               ),
-                                              children: [
-                                                TextSpan(
-                                                  text: 'Password baru akan dirubah berdasarkan tanggal lahir yang terdaftar pada akun anda, dengan format',
-                                                ),
-                                                TextSpan(
-                                                  text: ' DDMMYYY',
-                                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                                ),
-                                              ]
-                                          ),
+                                            ),
+                                          ],
                                         ),
-                                        const SizedBox(height: 10),
-                                        const Text(
-                                          'Contoh : 12011999',
-                                          textAlign: TextAlign.start,
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                          onPressed: () => Navigator.pop(context),
-                                          child: const Text('Ok')
-                                      ),
-                                    ],
-                                  )
-                              );
+                                        actions: [
+                                          TextButton(
+                                              onPressed: () =>
+                                                  Navigator.pop(context),
+                                              child: const Text('Ok')),
+                                        ],
+                                      ));
                             },
                             icon: const Hero(
                               tag: 'bantuan_icon_reset_password',
@@ -326,9 +330,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                           )
                         ],
                       ),
-                    ]
-                  )
-                )
+                    ]))
               ],
             ),
           ),

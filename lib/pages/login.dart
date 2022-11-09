@@ -289,9 +289,12 @@ class _LoginState extends State<Login> {
                             onPressed: () {
                               Navigator.pushNamed(context, 'register');
                             },
-                            child: const Text(
-                              'Daftar',
-                              style: TextStyle(color: Colors.white),
+                            child: const Hero(
+                              tag: 'register-text',
+                              child: Text(
+                                'Daftar',
+                                style: TextStyle(color: Colors.white),
+                              ),
                             ),
                           ),
                         ],

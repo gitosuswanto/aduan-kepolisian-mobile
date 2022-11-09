@@ -69,14 +69,14 @@ class _RegisterState extends State<Register> {
   void _renderLoadingIndicator() {
     _isLoading
         ? showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      },
-    )
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            },
+          )
         : Navigator.pop(context);
   }
 
@@ -105,11 +105,14 @@ class _RegisterState extends State<Register> {
             _isLoading = false;
             _renderLoadingIndicator();
           });
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Register Berhasil'),
-            ),
-          ).closed.then((value) {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(
+                const SnackBar(
+                  content: Text('Register Berhasil'),
+                ),
+              )
+              .closed
+              .then((value) {
             Navigator.pop(context);
           });
         } else {
@@ -129,30 +132,34 @@ class _RegisterState extends State<Register> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        color: Config().getColor,
-        child: SafeArea(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        IconButton(
-                          icon: const Icon(Ionicons.arrow_back),
-                          iconSize: 24,
-                          color: Colors.white,
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                        ),
-                        const SizedBox(width: 10),
-                        const Text(
+    return Hero(
+      tag: 'register',
+      child: Scaffold(
+        body: Container(
+          width: double.infinity,
+          height: double.infinity,
+          color: Config().getColor,
+          child: SafeArea(
+              child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      IconButton(
+                        icon: const Icon(Ionicons.arrow_back),
+                        iconSize: 24,
+                        color: Colors.white,
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                      const SizedBox(width: 10),
+                      const Hero(
+                        tag: 'register-text',
+                        child: Text(
                           'Daftar',
                           style: TextStyle(
                             color: Colors.white,
@@ -160,83 +167,83 @@ class _RegisterState extends State<Register> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        const Spacer(),
-                        IconButton(
-                          icon: const Icon(Ionicons.help_circle_outline),
-                          iconSize: 24,
-                          color: Colors.white,
-                          onPressed: () {
-                            // show help dialog
-                            showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    title: const Text(
-                                        'Bantuan',
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 20,
-                                        ),
+                      ),
+                      const Spacer(),
+                      IconButton(
+                        icon: const Icon(Ionicons.help_circle_outline),
+                        iconSize: 24,
+                        color: Colors.white,
+                        onPressed: () {
+                          // show help dialog
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: const Text(
+                                    'Bantuan',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20,
                                     ),
-                                    content: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        RichText(
-                                          text: const TextSpan(
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 16,
+                                  ),
+                                  content: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      RichText(
+                                        text: const TextSpan(
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 16,
+                                            ),
+                                            children: [
+                                              TextSpan(
+                                                text:
+                                                    'Password baru akan dirubah berdasarkan tanggal lahir yang terdaftar pada akun anda, dengan format',
                                               ),
-                                              children: [
-                                                TextSpan(
-                                                  text: 'Password baru akan dirubah berdasarkan tanggal lahir yang terdaftar pada akun anda, dengan format',
-                                                ),
-                                                TextSpan(
-                                                  text: ' DDMMYYY',
-                                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                                ),
-                                              ]
-                                          ),
+                                              TextSpan(
+                                                text: ' DDMMYYYY',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold),
+                                              ),
+                                            ]),
+                                      ),
+                                      const SizedBox(height: 10),
+                                      const Text(
+                                        'Contoh : 28121990',
+                                        textAlign: TextAlign.start,
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 16,
                                         ),
-                                        const SizedBox(height: 10),
-                                        const Text(
-                                          'Contoh : 12011999',
-                                          textAlign: TextAlign.start,
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    actions: [
-                                      TextButton(
+                                      ),
+                                    ],
+                                  ),
+                                  actions: [
+                                    TextButton(
                                         onPressed: () {
                                           Navigator.pop(context);
                                         },
-                                        child: const Text('OK')
-                                      )
-                                    ],
-                                  );
-                                }
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                    const Text(
-                      'Daftarkan diri anda',
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w300,
-                        fontSize: 26,
+                                        child: const Text('OK'))
+                                  ],
+                                );
+                              });
+                        },
                       ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  const Text(
+                    'Daftarkan diri anda',
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w300,
+                      fontSize: 26,
                     ),
-                    const SizedBox(height: 15),
-                    Container(
+                  ),
+                  const SizedBox(height: 15),
+                  Container(
                       width: double.infinity,
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       decoration: BoxDecoration(
@@ -335,9 +342,10 @@ class _RegisterState extends State<Register> {
                                 ).then((value) {
                                   if (value != null) {
                                     setState(() {
-                                      _tanggalLahir.text = DateFormat('yyyy-MM-dd')
-                                          .format(value)
-                                          .toString();
+                                      _tanggalLahir.text =
+                                          DateFormat('yyyy-MM-dd')
+                                              .format(value)
+                                              .toString();
                                     });
                                   }
                                 });
@@ -459,7 +467,8 @@ class _RegisterState extends State<Register> {
                                   onChanged: (value) {
                                     setState(() {
                                       _selectedPekerjaan = value.toString();
-                                      _pekerjaanController.text = value.toString();
+                                      _pekerjaanController.text =
+                                          value.toString();
                                     });
                                   },
                                 ),
@@ -507,7 +516,8 @@ class _RegisterState extends State<Register> {
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Config().getColor,
-                                  padding: const EdgeInsets.symmetric(vertical: 15),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 15),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10),
                                   ),
@@ -524,12 +534,11 @@ class _RegisterState extends State<Register> {
                             const SizedBox(height: 20),
                           ],
                         ),
-                      )
-                    ),
-                  ],
-                ),
+                      )),
+                ],
               ),
-            )
+            ),
+          )),
         ),
       ),
     );
