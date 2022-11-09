@@ -1,5 +1,6 @@
 import 'package:aduan/pages.dart';
 import 'package:aduan/pages/login.dart';
+import 'package:aduan/pages/register.dart';
 import 'package:aduan/pages/reset_password.dart';
 import 'package:aduan/pages/tambah_aduan.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +34,7 @@ class _AppState extends State<App> {
         'tambah-aduan': (context) => const TambahAduan(),
         'login': (context) => const Login(),
         'reset-password': (context) => const ResetPassword(),
+        'register' : (context) => const Register(),
       },
     );
   }

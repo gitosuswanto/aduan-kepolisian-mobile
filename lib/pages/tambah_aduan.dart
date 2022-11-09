@@ -248,7 +248,6 @@ class _TambahAduanState extends State<TambahAduan> {
                         maxTime: DateTime.now(),
                         locale: LocaleType.id,
                         onConfirm: (date) {
-                          print('confirm $date');
                           setState(() {
                             _waktuController.text = '${date.year}-${date.month}-${date.day} ${date.hour}:${date.minute}:${date.second}';
                           });

@@ -24,18 +24,17 @@ class _LoginState extends State<Login> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  // email validator
   String? _emailValidator(String? value) {
     if (value == null || value.isEmpty) {
       return 'Email is required';
     }
+
     if (!isEmail(value)) {
       return 'Email is invalid';
     }
     return null;
   }
 
-  // password validator
   String? _passwordValidator(String? value) {
     if (value == null || value.isEmpty) {
       return 'Password is required';
@@ -55,8 +54,6 @@ class _LoginState extends State<Login> {
   @override
   void initState() {
     super.initState();
-    _emailController.text = 'test@mail.com';
-    _passwordController.text = '01012022';
   }
 
   // attempt login
@@ -278,6 +275,26 @@ class _LoginState extends State<Login> {
                           ),
                           child: const Text('Masuk'),
                         ),
+                      ),
+                      // create account
+                      const SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text(
+                            'Belum punya akun ?',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pushNamed(context, 'register');
+                            },
+                            child: const Text(
+                              'Daftar',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),

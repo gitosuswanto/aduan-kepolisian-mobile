@@ -6,7 +6,6 @@ import 'package:http/http.dart' as http;
 
 class ApiRequests {
 
-  // create aduan
   static Future<AduanData> createAduan(Data aduan) async {
     final req = await http.MultipartRequest(
       'POST',

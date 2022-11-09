@@ -21,7 +21,6 @@ class _ResetPasswordState extends State<ResetPassword> {
   @override
   void initState() {
     super.initState();
-    _emailController.text = 'test@mail.com';
   }
 
   String? _emailValidator(String? value) {
