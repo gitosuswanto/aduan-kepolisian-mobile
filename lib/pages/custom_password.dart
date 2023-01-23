@@ -67,9 +67,9 @@ class _CustomPasswordState extends State<CustomPassword> {
       return 'Password is required';
     }
 
-    setState(() {
-      _passBaru = value;
-    });
+    if (value.length < 8) {
+      return 'Password must be at least 8 characters';
+    }
 
     return null;
   }
