@@ -1,4 +1,5 @@
 import 'package:aduan/pages.dart';
+import 'package:aduan/pages/custom_password.dart';
 import 'package:aduan/pages/login.dart';
 import 'package:aduan/pages/register.dart';
 import 'package:aduan/pages/reset_password.dart';
@@ -31,10 +32,11 @@ class _AppState extends State<App> {
       home: widget.home,
       routes: {
         'pages': (context) => const Pages(),
-        'tambah-aduan': (context) => const TambahAduan(),
         'login': (context) => const Login(),
+        'register': (context) => const Register(),
+        'tambah-aduan': (context) => const TambahAduan(),
         'reset-password': (context) => const ResetPassword(),
-        'register' : (context) => const Register(),
+        'custom-password': (context) => const CustomPassword(),
       },
     );
   }

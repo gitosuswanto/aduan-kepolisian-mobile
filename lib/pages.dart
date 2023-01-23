@@ -47,15 +47,19 @@ class _PagesState extends State<Pages> {
     return Scaffold(
       appBar: AppBar(
         title: Text(_title),
-        // actions: menu[_selectedIndex]['title'] == 'Aduan'
-        //     ? [
-        //         const ButtonSearch(),
-        //         IconButton(
-        //           onPressed: () {},
-        //           icon: const Icon(Ionicons.filter),
-        //         ),
-        //       ]
-        //     : [const ButtonSearch()],
+        actions: menu[_selectedIndex]['title'] == 'Profile'
+            ? [
+                IconButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, 'custom-password');
+                  },
+                  icon: const Hero(
+                    tag: "key-icon",
+                    child: Icon(Ionicons.key_sharp),
+                  ),
+                ),
+              ]
+            : [],
       ),
       body: AnimatedSwitcher(
         transitionBuilder: (child, animation) {
