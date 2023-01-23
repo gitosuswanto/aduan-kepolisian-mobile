@@ -15,6 +15,9 @@ class CustomPassword extends StatefulWidget {
 
 class _CustomPasswordState extends State<CustomPassword> {
   bool _isLoading = false;
+  bool _obscurePLama = true;
+  bool _obscurePBaru = true;
+  bool _obscurePBaruConfirm = true;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -82,6 +85,24 @@ class _CustomPasswordState extends State<CustomPassword> {
     }
 
     return null;
+  }
+
+  void _toggleObscurePLama() {
+    setState(() {
+      _obscurePLama = !_obscurePLama;
+    });
+  }
+
+  void _toggleObscurePBaru() {
+    setState(() {
+      _obscurePBaru = !_obscurePBaru;
+    });
+  }
+
+  void _toggleObscurePBaruConfirm() {
+    setState(() {
+      _obscurePBaruConfirm = !_obscurePBaruConfirm;
+    });
   }
 
   @override
@@ -177,20 +198,30 @@ class _CustomPasswordState extends State<CustomPassword> {
                           validator: _passLamaValidator,
                           cursorColor: Colors.white,
                           controller: _passLamaController,
-                          decoration: const InputDecoration(
+                          obscureText: _obscurePLama,
+                          decoration: InputDecoration(
                             labelText: 'Password Saat Ini',
-                            border: OutlineInputBorder(),
-                            labelStyle: TextStyle(color: Colors.white54),
-                            enabledBorder: OutlineInputBorder(
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _obscurePLama
+                                    ? Ionicons.eye_off_outline
+                                    : Ionicons.eye_outline,
+                                color: Colors.white,
+                              ),
+                              onPressed: () => _toggleObscurePLama(),
+                            ),
+                            border: const OutlineInputBorder(),
+                            labelStyle: const TextStyle(color: Colors.white54),
+                            enabledBorder: const OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.white),
                             ),
-                            focusedBorder: OutlineInputBorder(
+                            focusedBorder: const OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.white),
                               borderRadius: BorderRadius.all(
                                 Radius.circular(15),
                               ),
                             ),
-                            errorBorder: OutlineInputBorder(
+                            errorBorder: const OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.redAccent),
                             ),
                           ),
@@ -201,20 +232,30 @@ class _CustomPasswordState extends State<CustomPassword> {
                           validator: _passBaruValidator,
                           cursorColor: Colors.white,
                           controller: _passBaruController,
-                          decoration: const InputDecoration(
+                          obscureText: _obscurePBaru,
+                          decoration: InputDecoration(
                             labelText: 'Password Baru',
-                            border: OutlineInputBorder(),
-                            labelStyle: TextStyle(color: Colors.white54),
-                            enabledBorder: OutlineInputBorder(
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _obscurePBaru
+                                    ? Ionicons.eye_off_outline
+                                    : Ionicons.eye_outline,
+                                color: Colors.white,
+                              ),
+                              onPressed: () => _toggleObscurePBaru(),
+                            ),
+                            border: const OutlineInputBorder(),
+                            labelStyle: const TextStyle(color: Colors.white54),
+                            enabledBorder: const OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.white),
                             ),
-                            focusedBorder: OutlineInputBorder(
+                            focusedBorder: const OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.white),
                               borderRadius: BorderRadius.all(
                                 Radius.circular(15),
                               ),
                             ),
-                            errorBorder: OutlineInputBorder(
+                            errorBorder: const OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.redAccent),
                             ),
                           ),
@@ -225,20 +266,30 @@ class _CustomPasswordState extends State<CustomPassword> {
                           validator: _passBaruConfirmValidator,
                           cursorColor: Colors.white,
                           controller: _passBaruConfirmController,
-                          decoration: const InputDecoration(
+                          obscureText: _obscurePBaruConfirm,
+                          decoration: InputDecoration(
                             labelText: 'Konfirmasi Password Baru',
-                            border: OutlineInputBorder(),
-                            labelStyle: TextStyle(color: Colors.white54),
-                            enabledBorder: OutlineInputBorder(
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _obscurePBaruConfirm
+                                    ? Ionicons.eye_off_outline
+                                    : Ionicons.eye_outline,
+                                color: Colors.white,
+                              ),
+                              onPressed: () => _toggleObscurePBaruConfirm(),
+                            ),
+                            border: const OutlineInputBorder(),
+                            labelStyle: const TextStyle(color: Colors.white54),
+                            enabledBorder: const OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.white),
                             ),
-                            focusedBorder: OutlineInputBorder(
+                            focusedBorder: const OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.white),
                               borderRadius: BorderRadius.all(
                                 Radius.circular(15),
                               ),
                             ),
-                            errorBorder: OutlineInputBorder(
+                            errorBorder: const OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.redAccent),
                             ),
                           ),
