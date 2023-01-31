@@ -80,7 +80,7 @@ class _CustomPasswordState extends State<CustomPassword> {
     }
 
     // if value is different with _passBaru
-    if (value != _passBaru) {
+    if (value != _passBaruController.text) {
       return 'Password is not match';
     }
 

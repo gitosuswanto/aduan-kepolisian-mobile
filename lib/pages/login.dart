@@ -155,155 +155,161 @@ class _LoginState extends State<Login> {
         height: double.infinity,
         color: Config().getColor,
         child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  'Sign In',
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.white,
-                  ),
-                ),
-                const SizedBox(height: 50),
-                Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      TextFormField(
-                        style: const TextStyle(color: Colors.white),
-                        validator: _emailValidator,
-                        cursorColor: Colors.white,
-                        controller: _emailController,
-                        decoration: const InputDecoration(
-                          labelText: 'Email',
-                          prefixIcon: Icon(
-                            Ionicons.mail_outline,
-                            color: Colors.white,
-                          ),
-                          border: OutlineInputBorder(),
-                          labelStyle: TextStyle(color: Colors.white),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white),
-                          ),
-                          errorBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.redAccent),
-                          ),
-                        ),
+          child: ListView(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Sign In',
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white,
                       ),
-                      const SizedBox(height: 20),
-                      TextFormField(
-                        style: const TextStyle(color: Colors.white),
-                        controller: _passwordController,
-                        cursorColor: Colors.white,
-                        obscureText: _obscureText,
-                        enableSuggestions: false,
-                        autocorrect: false,
-                        validator: _passwordValidator,
-                        decoration: InputDecoration(
-                          labelText: 'Password',
-                          prefixIcon: const Icon(
-                            Ionicons.lock_closed_outline,
-                            color: Colors.white,
-                          ),
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              _obscureText
-                                  ? Ionicons.eye_off_outline
-                                  : Ionicons.eye_outline,
-                              color: Colors.white,
-                            ),
-                            onPressed: () => _toggleObscureText(),
-                          ),
-                          border: const OutlineInputBorder(),
-                          labelStyle: const TextStyle(color: Colors.white),
-                          enabledBorder: const OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white),
-                          ),
-                          focusedBorder: const OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white),
-                          ),
-                          errorBorder: const OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.redAccent),
-                          ),
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                    ),
+                    const SizedBox(height: 50),
+                    Form(
+                      key: _formKey,
+                      child: Column(
                         children: [
-                          Hero(
-                            tag: 'reset-password',
-                            child: TextButton(
+                          TextFormField(
+                            style: const TextStyle(color: Colors.white),
+                            validator: _emailValidator,
+                            cursorColor: Colors.white,
+                            controller: _emailController,
+                            decoration: const InputDecoration(
+                              labelText: 'Email',
+                              prefixIcon: Icon(
+                                Ionicons.mail_outline,
+                                color: Colors.white,
+                              ),
+                              border: OutlineInputBorder(),
+                              labelStyle: TextStyle(color: Colors.white),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white),
+                              ),
+                              errorBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.redAccent),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          TextFormField(
+                            style: const TextStyle(color: Colors.white),
+                            controller: _passwordController,
+                            cursorColor: Colors.white,
+                            obscureText: _obscureText,
+                            enableSuggestions: false,
+                            autocorrect: false,
+                            validator: _passwordValidator,
+                            decoration: InputDecoration(
+                              labelText: 'Password',
+                              prefixIcon: const Icon(
+                                Ionicons.lock_closed_outline,
+                                color: Colors.white,
+                              ),
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  _obscureText
+                                      ? Ionicons.eye_off_outline
+                                      : Ionicons.eye_outline,
+                                  color: Colors.white,
+                                ),
+                                onPressed: () => _toggleObscureText(),
+                              ),
+                              border: const OutlineInputBorder(),
+                              labelStyle: const TextStyle(color: Colors.white),
+                              enabledBorder: const OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white),
+                              ),
+                              focusedBorder: const OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white),
+                              ),
+                              errorBorder: const OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.redAccent),
+                              ),
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Hero(
+                                tag: 'reset-password',
+                                child: TextButton(
+                                  onPressed: () {
+                                    Navigator.pushNamed(
+                                        context, 'reset-password');
+                                  },
+                                  child: const Text(
+                                    'Lupa Password ?',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          _errorMessages.isNotEmpty
+                              ? Text(
+                                  _errorMessages,
+                                  style:
+                                      const TextStyle(color: Colors.redAccent),
+                                )
+                              : const SizedBox.shrink(),
+                          const SizedBox(height: 20),
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
                               onPressed: () {
-                                Navigator.pushNamed(context, 'reset-password');
+                                if (_formKey.currentState!.validate()) {
+                                  attemptLogin();
+                                }
                               },
-                              child: const Text(
-                                'Lupa Password ?',
+                              style: ElevatedButton.styleFrom(
+                                padding: const EdgeInsets.all(15),
+                                foregroundColor: Config().getColor,
+                                backgroundColor: Colors.white,
+                              ),
+                              child: const Text('Masuk'),
+                            ),
+                          ),
+                          // create account
+                          const SizedBox(height: 10),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text(
+                                'Belum punya akun ?',
                                 style: TextStyle(color: Colors.white),
                               ),
-                            ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pushNamed(context, 'register');
+                                },
+                                child: const Hero(
+                                  tag: 'register-text',
+                                  child: Text(
+                                    'Daftar',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                      const SizedBox(height: 10),
-                      _errorMessages.isNotEmpty
-                          ? Text(
-                              _errorMessages,
-                              style: const TextStyle(color: Colors.redAccent),
-                            )
-                          : const SizedBox.shrink(),
-                      const SizedBox(height: 20),
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              attemptLogin();
-                            }
-                          },
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.all(15),
-                            foregroundColor: Config().getColor,
-                            backgroundColor: Colors.white,
-                          ),
-                          child: const Text('Masuk'),
-                        ),
-                      ),
-                      // create account
-                      const SizedBox(height: 10),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text(
-                            'Belum punya akun ?',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              Navigator.pushNamed(context, 'register');
-                            },
-                            child: const Hero(
-                              tag: 'register-text',
-                              child: Text(
-                                'Daftar',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
